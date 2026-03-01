@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Turing Test</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="container">
+    <h1>Turing Test Simulation</h1>
+
+    <div id="chatbox"></div>
+
+    <div class="input-area">
+        <input type="text" id="message" placeholder="Type your message..." />
+        <button onclick="sendMessage()">Send</button>
+    </div>
+
+    <div class="guess-area">
+        <h3>Who were you chatting with?</h3>
+        <button onclick="makeGuess('AI')">AI</button>
+        <button onclick="makeGuess('Human')">Human</button>
+    </div>
+
+    <div id="result"></div>
+</div>
+
+<script>
+function sendMessage() {
+    let message = document.getElementById("message").value;
+    let chatbox = document.getElementById("chatbox");
+
+    chatbox.innerHTML += `<div class="user">You: ${message}</div>`;
+
+    fetch("/chat", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({message: message})
+    })
+    .then(res => res.json())
+    .then(data => {
+        chatbox.innerHTML += `<div class="bot">Agent: ${data.reply}</div>`;
+        document.getElementById("message").value = "";
+    });
+}
+
+function makeGuess(choice) {
+    fetch("/guess", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({guess: choice})
+    })
+    .then(res => res.json())
+    .then(data => {
+        document.getElementById("result").innerText = data.result;
+    });
+}
+</script>
+
+</body>
+</html>
