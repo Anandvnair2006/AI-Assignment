@@ -1,0 +1,48 @@
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 20px;
+}
+
+h1 {
+    margin-top: 0;
+}
+
+.controls {
+    margin: 10px;
+}
+
+button {
+    padding: 8px 12px;
+    margin: 2px;
+    cursor: pointer;
+}
+
+#metrics {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+#grid {
+    display: grid;
+    grid-template-columns: repeat(70, 12px);
+    justify-content: center;
+    gap: 0;
+}
+
+.cell {
+    width: 12px;
+    height: 12px;
+    border: 1px solid #ddd;
+    box-sizing: border-box; /* Crucial for keeping the grid aligned */
+    background: white;
+}
+
+.start { background: green; }
+.goal { background: red; }
+.obstacle { background: black; }
+.path { background: yellow; }

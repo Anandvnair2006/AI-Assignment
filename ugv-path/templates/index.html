@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>UGV Path Planner</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+    <h1>UGV Battlefield Path Planner (70x70 Km)</h1>
+
+    <div class="controls">
+        <button onclick="setMode('start')">Place Start</button> 
+        <button onclick="setMode('goal')">Place Goal</button> 
+        <button onclick="setMode('obstacle')">Place Custom Obstacle</button> 
+        <button onclick="resetGrid()">Reset Grid</button>
+    </div>
+
+    <div class="controls">
+        <strong>Random Obstacles:</strong>
+        <button onclick="generateObstacles(0.15)">Low Density</button>
+        <button onclick="generateObstacles(0.30)">Medium Density</button>
+        <button onclick="generateObstacles(0.45)">High Density</button>
+    </div>
+
+    <div id="metrics">
+        Path Length: 0 | Nodes Explored: 0 | Execution Time: 0 ms
+    </div>
+
+    <div id="grid"></div>
+
+    <script src="/static/script.js"></script>
+
+</body>
+</html>
