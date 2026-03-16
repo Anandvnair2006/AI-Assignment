@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>India Route Finder</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>India Route Finder</h1>
+
+<div class="controls">
+
+<select id="start">
+{% for city in cities %}
+<option>{{city}}</option>
+{% endfor %}
+</select>
+
+<select id="goal">
+{% for city in cities %}
+<option>{{city}}</option>
+{% endfor %}
+</select>
+
+<button onclick="findRoute()">Find Shortest Route</button>
+
+</div>
+
+<div id="result"></div>
+
+</div>
+
+<script src="/static/script.js"></script>
+
+</body>
+</html>
