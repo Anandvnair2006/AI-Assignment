@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Australia Map Coloring — CSP</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+<body>
+
+  <!-- ── Header ────────────────────────────────────────────────── -->
+  <header>
+    <div class="header-inner">
+      <div class="header-title">
+        <span class="logo">◈</span>
+        <div>
+          <h1>Map Coloring CSP</h1>
+          <p class="subtitle">Constraint Satisfaction · Australia · Backtracking Search</p>
+        </div>
+      </div>
+      <div class="controls">
+        <button id="btn-step"  class="btn btn-outline">Step →</button>
+        <button id="btn-run"   class="btn btn-primary">Run All</button>
+        <button id="btn-reset" class="btn btn-ghost">Reset</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ── Main layout ───────────────────────────────────────────── -->
+  <main>
+
+    <!-- Left column: map + legend -->
+    <section class="panel panel-map">
+      <div class="panel-label">Map</div>
+
+      <svg id="map-svg" viewBox="0 0 380 330" xmlns="http://www.w3.org/2000/svg">
+
+        <!-- WA -->
+        <g class="region" data-region="WA" id="r-WA">
+          <polygon points="10,20 140,20 140,270 10,270" />
+          <text x="68" y="150">WA</text>
+        </g>
+
+        <!-- NT -->
+        <g class="region" data-region="NT" id="r-NT">
+          <polygon points="140,20 230,20 230,165 140,165" />
+          <text x="183" y="95">NT</text>
+        </g>
+
+        <!-- SA -->
+        <g class="region" data-region="SA" id="r-SA">
+          <polygon points="140,165 230,165 230,250 190,290 140,270" />
+          <text x="178" y="225">SA</text>
+        </g>
+
+        <!-- QLD -->
+        <g class="region" data-region="QLD" id="r-QLD">
+          <polygon points="230,20 360,20 360,195 230,195 230,165" />
+          <text x="293" y="107">QLD</text>
+        </g>
+
+        <!-- NSW -->
+        <g class="region" data-region="NSW" id="r-NSW">
+          <polygon points="230,195 360,195 350,265 190,290 230,250" />
+          <text x="278" y="245">NSW</text>
+        </g>
+
+        <!-- V -->
+        <g class="region" data-region="V" id="r-V">
+          <polygon points="190,290 350,265 338,305 190,308" />
+          <text x="262" y="294">VIC</text>
+        </g>
+
+        <!-- T -->
+        <g class="region" data-region="T" id="r-T">
+          <ellipse cx="292" cy="325" rx="32" ry="14" />
+          <text x="292" y="329">TAS</text>
+        </g>
+
+      </svg>
+
+      <!-- Legend -->
+      <div class="legend">
+        <div class="legend-item"><span class="dot dot-red"></span>Red</div>
+        <div class="legend-item"><span class="dot dot-green"></span>Green</div>
+        <div class="legend-item"><span class="dot dot-blue"></span>Blue</div>
+        <div class="legend-item"><span class="dot dot-none"></span>Unassigned</div>
+      </div>
+    </section>
+
+    <!-- Middle column: stats + assignment -->
+    <section class="panel panel-info">
+
+      <!-- Stats grid -->
+      <div class="panel-label">Statistics</div>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <span class="stat-val" id="stat-assigned">0</span>
+          <span class="stat-lbl">Assigned</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-val" id="stat-backtracks">0</span>
+          <span class="stat-lbl">Backtracks</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-val" id="stat-steps">0</span>
+          <span class="stat-lbl">Steps</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-val" id="stat-checks">0</span>
+          <span class="stat-lbl">Checks</span>
+        </div>
+      </div>
+
+      <!-- Current assignment -->
+      <div class="panel-label" style="margin-top:1.25rem;">Assignment</div>
+      <div id="assign-list" class="assign-list"></div>
+
+      <!-- Status message -->
+      <div id="status-msg" class="status-msg"></div>
+
+      <!-- Progress bar -->
+      <div class="progress-wrap">
+        <div class="progress-label">
+          <span>Progress</span>
+          <span id="progress-pct">0%</span>
+        </div>
+        <div class="progress-track">
+          <div class="progress-fill" id="progress-fill" style="width:0%"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Right column: constraint graph + trace -->
+    <section class="panel panel-right">
+
+      <!-- Constraint graph -->
+      <div class="panel-label">Constraint Graph</div>
+      <svg id="cg-svg" viewBox="0 0 300 160" xmlns="http://www.w3.org/2000/svg" class="cg-svg">
+        <g class="cg-edges">
+          <line x1="50"  y1="80" x2="120" y2="45"/>  <!-- WA-NT -->
+          <line x1="50"  y1="80" x2="155" y2="110"/> <!-- WA-SA -->
+          <line x1="120" y1="45" x2="200" y2="45"/>  <!-- NT-QLD -->
+          <line x1="120" y1="45" x2="155" y2="110"/> <!-- NT-SA -->
+          <line x1="155" y1="110" x2="200" y2="45"/> <!-- SA-QLD -->
+          <line x1="155" y1="110" x2="235" y2="110"/><!-- SA-NSW -->
+          <line x1="155" y1="110" x2="270" y2="110"/><!-- SA-V -->
+          <line x1="200" y1="45" x2="235" y2="110"/> <!-- QLD-NSW -->
+          <line x1="235" y1="110" x2="270" y2="110"/><!-- NSW-V -->
+        </g>
+        <g class="cg-nodes">
+          <g class="cg-node" id="cg-WA">  <circle cx="50"  cy="80"  r="20"/><text x="50"  y="84">WA</text></g>
+          <g class="cg-node" id="cg-NT">  <circle cx="120" cy="45"  r="20"/><text x="120" y="49">NT</text></g>
+          <g class="cg-node" id="cg-SA">  <circle cx="155" cy="110" r="20"/><text x="155" y="114">SA</text></g>
+          <g class="cg-node" id="cg-QLD"> <circle cx="200" cy="45"  r="20"/><text x="200" y="49">QLD</text></g>
+          <g class="cg-node" id="cg-NSW"> <circle cx="235" cy="110" r="20"/><text x="235" y="114">NSW</text></g>
+          <g class="cg-node" id="cg-V">   <circle cx="270" cy="110" r="20"/><text x="270" y="114">V</text></g>
+          <g class="cg-node" id="cg-T">   <circle cx="270" cy="45"  r="20"/><text x="270" y="49">T</text></g>
+        </g>
+      </svg>
+
+      <!-- Trace log -->
+      <div class="panel-label" style="margin-top:1rem;">Backtracking Trace</div>
+      <div id="trace-empty" class="trace-empty">Press "Step" or "Run All" to begin.</div>
+      <div id="trace-log"   class="trace-log"></div>
+
+    </section>
+  </main>
+
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+
+</body>
+</html>
