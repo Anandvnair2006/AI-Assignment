@@ -1,183 +1,144 @@
-# 🗺️ Telangana Map Coloring using CSP (Constraint Satisfaction Problem)
+Here’s a clean, ready-to-use **README.md** for your project 👇
 
-## 📌 Overview
+---
 
-This project solves the **Map Coloring Problem** for the districts of Telangana using a **Constraint Satisfaction Problem (CSP)** approach.
+# 🗺️ Telangana Map Coloring using CSP
 
-The goal is to assign colors to each district such that:
-
-* No two adjacent districts share the same color
-* Minimum number of colors is used (4-color theorem)
-
-The project also includes a **Flask web app** to visualize the colored map.
+This project solves the **map coloring problem** for Telangana districts using a **Constraint Satisfaction Problem (CSP)** approach. It ensures that no two adjacent districts share the same color and generates a visual output.
 
 ---
 
 ## 🚀 Features
 
-* 🧠 CSP-based map coloring (Backtracking)
-* 🖼️ Automatic region detection using OpenCV
-* 🎨 District-wise coloring of map image
-* 🌐 Flask web interface to display output
-* ⚡ Works with any clean district outline map
-
----
-
-## 🛠️ Technologies Used
-
-* Python
-* OpenCV (Image Processing)
-* NumPy
-* Flask (Web Framework)
+* Generic CSP implementation (reusable)
+* Automatic adjacency detection from GeoJSON
+* Backtracking search algorithm
+* Map visualization with labeled districts
+* Clean output image generation
 
 ---
 
 ## 📁 Project Structure
 
 ```
-project/
-│
-├── app.py                # Flask backend
-├── color_map.py         # CSP + image processing logic
-├── telangana.png        # Input map (outline image)
-│
-├── static/
-│   └── output.png       # Generated colored map
-│
-└── templates/
-    └── index.html       # Frontend UI
+.
+├── csp.py                      # CSP framework (Constraint + CSP classes)
+├── main.py                     # Map coloring implementation
+├── telangana_districts.geojson # Auto-downloaded file
+├── telangana_colored_map.png   # Output image
+└── README.md
 ```
 
 ---
 
-## 📦 Installation
+## ⚙️ Setup Instructions (Using `uv`)
 
-### 1. Clone or download the project
+### 1. Install `uv`
 
 ```bash
-git clone <your-repo-url>
-cd project
+pip install uv
 ```
 
 ---
 
-### 2. Install dependencies
+### 2. Create virtual environment
 
 ```bash
-pip install opencv-python numpy flask
+uv venv
 ```
 
 ---
 
-## ▶️ How to Run
+### 3. Activate environment
 
-### Step 1: Add your map
-
-Place your Telangana district outline image as:
-
-```
-telangana.png
-```
-
-✔ Recommended:
-
-* Black boundaries
-* Light/white background
-* Clear district separation
-
----
-
-### Step 2: Run Flask app
+**Linux / Mac:**
 
 ```bash
-python app.py
+source .venv/bin/activate
+```
+
+**Windows:**
+
+```bash
+.venv\Scripts\activate
 ```
 
 ---
 
-### Step 3: Open browser
+### 4. Install dependencies
 
-Go to:
-
-```
-http://127.0.0.1:5000/
+```bash
+uv pip install geopandas matplotlib shapely
 ```
 
 ---
 
-### Step 4: View output
+## ▶️ Run the Project
 
-* The CSP algorithm runs automatically
-* Colored map will be generated at:
-
-```
-static/output.png
+```bash
+python main.py
 ```
 
-* Displayed on the webpage
+---
+
+## 📥 What Happens
+
+* Downloads Telangana GeoJSON (if not already present)
+* Extracts district data
+* Detects neighboring districts using geometry
+* Applies CSP with constraints
+* Solves using backtracking
+* Generates a colored map
 
 ---
 
-## 🧠 How It Works
+## 🖼️ Output
 
-### 1. Image Processing
+* File: `telangana_colored_map.png`
+* Each district:
 
-* Convert image to grayscale
-* Threshold to detect boundaries
-* Extract district regions using contours
-
-### 2. Graph Construction
-
-* Each district = node
-* Adjacency determined by contour proximity
-
-### 3. CSP Solver
-
-* Uses **Backtracking**
-* Ensures no neighboring regions have same color
-
-### 4. Visualization
-
-* Each region is filled with assigned color
-* Output saved as image
+  * Has a color assigned
+  * Does not share color with neighbors
+  * Is labeled clearly
 
 ---
 
-## 🎨 Color Scheme
+## 🧠 Concept
 
-* Blue
-* Green
-* Red
-* Yellow
-
-(You can modify colors in `color_map.py`)
+* **Variables** → Districts
+* **Domains** → Colors
+* **Constraints** → Adjacent districts must differ
 
 ---
 
-## ⚠️ Notes / Limitations
+## 🔧 Customization
 
-* Accuracy depends on map quality
-* Text labels inside regions may create noise
-* Very thin borders may merge districts
-
----
-
-## 💡 Future Improvements
-
-* Use exact Telangana district adjacency graph
-* Add district labels on output map
-* Interactive UI (click districts)
-* Better region segmentation
+* Change colors → edit `colors` list
+* Use different regions → replace GeoJSON
+* Improve performance → add heuristics (MRV, forward checking)
 
 ---
 
-## 👨‍💻 Author
+## 🐛 Troubleshooting
 
-* Your Name
+If `geopandas` fails to install:
+
+```bash
+pip install --upgrade pip wheel
+```
+
+On Linux:
+
+```bash
+sudo apt install gdal-bin libgdal-dev
+```
 
 ---
 
-## ⭐ Acknowledgment
+## 📌 Future Improvements
 
-Based on classic **Map Coloring Problem (CSP)** from Artificial Intelligence.
+* Add GUI or web interface
+* Optimize CSP solving
+* Support other maps
+
 
