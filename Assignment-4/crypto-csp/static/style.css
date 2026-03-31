@@ -1,0 +1,10 @@
+    padding: 12px 16px;
+    border-radius: 10px;
+    font-size: 18px;
+    min-width: 80px;
+}
+
+/* Hidden */
+.hidden {
+    display: none;
+}

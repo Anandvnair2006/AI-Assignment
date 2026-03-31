@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Crypt Arithmetic Solver</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+    <div class="container">
+        <h1>🔐 Crypt Arithmetic Solver</h1>
+
+        <div class="equation">
+            <span>S E N D</span>
+            <span>+</span>
+            <span>M O R E</span>
+            <hr>
+            <span>M O N E Y</span>
+        </div>
+
+        <button onclick="solve()">Solve</button>
+
+        <div id="loading" class="hidden">Solving...</div>
+
+        <div id="result" class="hidden">
+            <h2>Solution</h2>
+
+            <div class="numbers">
+                <p id="equationText"></p>
+            </div>
+
+            <div class="mapping" id="mapping"></div>
+        </div>
+    </div>
+
+    <script>
+        function solve() {
+            document.getElementById("loading").classList.remove("hidden");
+            document.getElementById("result").classList.add("hidden");
+
+            fetch("/solve")
+            .then(res => res.json())
+            .then(data => {
+                document.getElementById("loading").classList.add("hidden");
+
+                if (data.error) {
+                    alert("No solution found");
+                    return;
+                }
+
+                document.getElementById("result").classList.remove("hidden");
+
+                // Equation
+                document.getElementById("equationText").innerText = data.equation;
+
+                // Mapping UI
+                const mapDiv = document.getElementById("mapping");
+                mapDiv.innerHTML = "";
+
+                for (let key in data.mapping) {
+                    const box = document.createElement("div");
+                    box.className = "map-box";
+                    box.innerHTML = `<span>${key}</span> → <strong>${data.mapping[key]}</strong>`;
+                    mapDiv.appendChild(box);
+                }
+            });
+        }
+    </script>
+
+</body>
+</html>
